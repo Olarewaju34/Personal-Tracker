@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 namespace PT.Domain.Abstraction
 {
     public abstract class  BaseEntity : ISoftDelete,IAuditBase
+
     {
+  
         private List<IDomainEvent> _domainEvents = [];
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public bool IsDeleted { get; set; }

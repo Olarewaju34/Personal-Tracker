@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PT.Domain.Abstraction
+namespace PT.Application.Abstraction.Repositories
 {
-    internal interface IRepository
+    internal interface ICategoryRepository
     {
     }
 }
