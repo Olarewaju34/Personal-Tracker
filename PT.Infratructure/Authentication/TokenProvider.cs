@@ -6,16 +6,17 @@ using PT.Domain.Entities.User;
 using PT.Infratructure.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PT.Infratructure.Authentication
 {
-    public class TokenProvider(IOptions<JwtSettings> jwtsettings) : ITokenProvider
+    internal sealed class TokenProvider(IOptions<JwtSettings> jwtsettings) : ITokenProvider
     {
         private readonly JwtSettings _jwtsettings = jwtsettings.Value;
         public string Create(IEnumerable<Claim> claims)
         {
-
+            throw new ApplicationException();
         }
 
         public (string Token, string RefreshToken) Create(Users user)
@@ -45,7 +46,7 @@ namespace PT.Infratructure.Authentication
             string token = handler.CreateToken(tokengenerator);
             string refreshToken = handler.CreateToken(refreshTokengenerator);
             return (token, refreshToken);
-    }
+        }
 
         public string GenerateLinkToken()
         {
@@ -54,7 +55,10 @@ namespace PT.Infratructure.Authentication
 
         public string GenerateRefreshToken()
         {
-            throw new NotImplementedException();
+            var randomNumber = new byte[410];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         public ClaimsPrincipal GetPrincipalFromToken(string token)
