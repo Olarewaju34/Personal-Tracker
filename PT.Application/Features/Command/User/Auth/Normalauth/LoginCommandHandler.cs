@@ -9,20 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PT.Application.Features.Command.User.Auth
+namespace PT.Application.Features.Command.User.Auth.Normalauth
 {
     public sealed class LoginCommandHandler(ITokenProvider _tokenProvider, IUserRepository _userRepository) : ICommandHandler<LoginCommad, Result>
     {
         public async Task<Result<Result>> Handle(LoginCommad request, CancellationToken cancellationToken)
         {
             var userExist = await _userRepository.ExistsAsync(u => u.Email == request.Email);
-            if(!userExist)
+            if (!userExist)
             {
                 return Result.Failure(UserErrors.NotFound);
             }
-            var user = await _userRepository.GetAsync(u=>u.Email== request.Email);
+            var user = await _userRepository.GetAsync(u => u.Email == request.Email);
             var passswordMatch = BCrypt.Net.BCrypt.Verify(request.Email, user.Email);
-            if(!passswordMatch)
+            if (!passswordMatch)
             {
                 return Result.Failure(UserErrors.InvalidCredentials);
             }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PT.Application.Features.Command.User.Auth
+namespace PT.Application.Features.Command.User.Auth.Normalauth
 {
-    public record LoginCommad(string Email, string Password): ICommand<Result>
+    public record LoginCommad(string Email, string Password) : ICommand<Result>;
 }
