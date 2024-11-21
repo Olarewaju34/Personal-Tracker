@@ -1,4 +1,5 @@
-﻿using PT.Domain.Shared;
+﻿using MassTransit;
+using PT.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace PT.Domain.Abstraction
     {
   
         private List<IDomainEvent> _domainEvents = [];
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; } = NewId.Next().ToSequentialGuid().ToString();
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
         public string? CreatedBy { get; set; }

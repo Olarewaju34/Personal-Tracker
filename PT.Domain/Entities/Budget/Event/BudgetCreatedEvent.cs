@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PT.Domain.Entities.Budget.Event
 {
-    internal class BudgetCreatedEvent(string BudgetId)
+    public record class BudgetCreatedEvent(string BudgetId)
     {
     }
 }

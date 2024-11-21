@@ -1,4 +1,7 @@
-﻿using PT.Domain.Abstraction;
+﻿using Microsoft.EntityFrameworkCore;
+using PT.Domain.Abstraction;
+using PT.Infratructure.Data;
+using System.Data.Entity;
 using System.Linq.Expressions;
 
 namespace PT.Infratructure.Repositories;
@@ -7,7 +10,7 @@ public abstract class Repository<T> : IRepository<T> where T : BaseEntity, new()
 {
     protected readonly PTContext _context;
 
-    protected BaseRepository(CarRentalsContext context)
+    protected Repository(PTContext context)
     {
         _context = context;
     }

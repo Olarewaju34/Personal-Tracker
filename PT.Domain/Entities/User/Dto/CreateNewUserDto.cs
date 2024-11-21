@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PT.Domain.Entities.User.Dto
 {
-    public record CreateNewUserDto(string FirstName, string LastName, string PhoneNumber, string UserName, string Password);
+    public record CreateNewUserDto(string FirstName, string LastName, string PhoneNumber, string Email, string Password);
 
 }
