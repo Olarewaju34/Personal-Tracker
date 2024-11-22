@@ -11,7 +11,7 @@ public interface IRepository<T> where T : BaseEntity, new()
 {
     Task<T> CreateAsync(T entity);
     Task<T> GetAsync(string id);
-    Task<T> GetAsync(Expression<Func<T, bool>> expression);
+    Task<T> GetAsync(Expression<Func<T, bool>> expression,CancellationToken cancellationToken=default);
     Task<T> UpdateAsync(T entity);
     Task RemoveAsync(T entity);
     Task<List<T>> GetAllByIdsAsync(List<string> ids);

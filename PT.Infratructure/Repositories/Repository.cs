@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PT.Domain.Abstraction;
 using PT.Infratructure.Data;
-using System.Data.Entity;
 using System.Linq.Expressions;
 
 namespace PT.Infratructure.Repositories;
@@ -78,6 +77,11 @@ public abstract class Repository<T> : IRepository<T> where T : BaseEntity, new()
     public async Task<IEnumerable<T>> SelectAll(Expression<Func<T, bool>> expression = null)
     {
         return await _context.Set<T>().Where(expression).ToListAsync();
+    }
+
+    public Task<T> GetAsync(Expression<Func<T, bool>> expression, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }
 

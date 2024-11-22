@@ -12,7 +12,7 @@ public class Transactions : BaseEntity
     public decimal Amount { get; private set; }
     public string CategoryId { get; private set; }
     public Categories Category { get; private set; }
-    public DateOnly DateOnly { get; private set; }
+    public DateTime DateOnly { get; private set; }
     public string Description { get; private set; }
     public MoneyFlow MoneyFlow { get; private set; }
 

@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Http;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using PT.Application.Abstraction;
 using PT.Application.Abstraction.ExternalApi;
 using PT.Application.Abstraction.ExternalApi.OptionsSettings;
@@ -8,45 +9,59 @@ using PT.Application.Abstraction.Repositories;
 using PT.Domain.Abstraction;
 using PT.Domain.Entities.User;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
-namespace PT.Application.Features.Command.User.Auth.GoogleAuth
+namespace PT.Application.Features.Command.User.Auth.GoogleAuth;
+
+public class GoogleAuthCommandHandler : ICommandHandler<GoogleAuthCommand, Result>
 {
-    public sealed class GoogleAuthCommandHandler() : ICommandHandler<GoogleAuthCommand, Result>
+    private readonly GoogleAuthConfig _googleAuthConfig;
+    private readonly IUserRepository _userRepository;
+    private readonly ITokenProvider _tokenProvider;
+    private readonly IHttpClientFactory _client;
+    public GoogleAuthCommandHandler(IUserRepository userRepository, ITokenProvider tokenProvider, IUnitOfWork unitOfWork, IOptions<GoogleAuthConfig> googleAuthConfig, IHttpClientFactory client)
     {
-        private readonly GoogleAuthConfig _googleAuthConfig ;
-        private readonly IUserRepository _userRepository;
-        private readonly ITokenProvider _tokenProvider;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IOptions<GoogleAuthConfig> googleAuthConfig;
-        private readonly IHttpClientFactory _client;
+        _userRepository = userRepository;
+        _tokenProvider = tokenProvider;
+        _googleAuthConfig = googleAuthConfig.Value;
+        _client = client;
+    }
 
-        public GoogleAuthCommandHandler(IUserRepository userRepository, ITokenProvider tokenProvider, IUnitOfWork unitOfWork, IOptions<GoogleAuthConfig> googleAuthConfig, IHttpClientFactory client)
+    public async Task<Result<Result>> Handle(GoogleAuthCommand request, CancellationToken cancellationToken)
+    {
+        Payload payload = new();
+        try
         {
-            _userRepository = userRepository;
-            _tokenProvider = tokenProvider;
-            _unitOfWork = _unitOfWork;
-            _googleAuthConfig = googleAuthConfig.Value;
-            _client = client;
-        }
-     
-        public async Task<Result<Result>> Handle(GoogleAuthCommand request, CancellationToken cancellationToken)
-        {
-            Payload payload = new();
-            try
+            payload = await ValidateAsync(request.IdToken, new ValidationSettings
             {
-                payload = await ValidateAsync(request.IdToken, new ValidationSettings
-                {
-                    Audience = [_googleAuthConfig.ClientId]
-                });
+                Audience = [_googleAuthConfig.ClientId]
+            });
 
-            }
-            catch (InvalidJwtException ex)
-            {
-                return Result.Failure(UserErrors.NotFound);
-            }
-            GoogleUserModel profileData = new();
-            using(HttpClient httpClient = new HttpClient()) {
         }
+        catch (Exception)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+
+        GoogleUserModel profileData = new();
+        using (HttpClient httpClient = new HttpClient())
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", request.AccessToken);
+            var response = await httpClient.GetAsync(string.Format(_googleAuthConfig.BaseUrl, _googleAuthConfig.Endpoint));
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                profileData = JsonConvert.DeserializeObject<GoogleUserModel>(content);
+            }
+        }
+        var dbUser = await _userRepository.GetAsync(u => u.Email == payload.Email, cancellationToken);
+        if (dbUser is null)
+        {
+            var user = Users.CreateUser(profileData.GivenName, profileData.FamilyName, null, profileData.Email);
+            await _userRepository.CreateAsync(user);
+            return Result.Success(user);
+        }
+        return Result.Success();
     }
 }

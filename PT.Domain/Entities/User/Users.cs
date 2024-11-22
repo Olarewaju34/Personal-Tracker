@@ -8,14 +8,7 @@ namespace PT.Domain.Entities.User
     public class Users : BaseEntity
     {
         public Users() { }
-        public Users(string firstname, string lastname, string phone, string email, string password)
-        {
-            FirstName = firstname;
-            LastName = lastname;
-            Phone = phone;
-            Email = email;
-            PassWord = password;
-        }
+     
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
         public string Phone { get; private set; }
@@ -26,9 +19,16 @@ namespace PT.Domain.Entities.User
         public IList<Transactions> Transactions { get; set; }
         public IList<Budgets> Budgets { get; set; }
 
-        public static Users CreateUser(string firstName,string lastName,string phone,string email,string password)
+        public static Users CreateUser(string firstName,string lastName,string phone,string email,string? password= null)
         {
-            var user = new Users(firstName, lastName,phone,email, password);
+            var user = new Users()
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Phone = phone,
+                Email = email,
+                PassWord = password
+            };
             return user;
         }
     }
