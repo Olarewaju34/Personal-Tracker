@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Query\Transaction\" />
     <Folder Include="Features\Query\User\" />
   </ItemGroup>
 

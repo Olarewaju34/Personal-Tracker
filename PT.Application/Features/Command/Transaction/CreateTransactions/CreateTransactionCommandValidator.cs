@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using PT.Domain.Entities.Transaction.Dtos;
 
-namespace PT.Application.Features.Command.Transactions
+namespace PT.Application.Features.Command.Transactions.CreateTransactions
 {
-    public sealed class CreateTransactionCommandValidator:AbstractValidator<CreateTransactionDto>
+    public sealed class CreateTransactionCommandValidator : AbstractValidator<CreateTransactionDto>
     {
         public CreateTransactionCommandValidator()
         {
@@ -12,7 +12,7 @@ namespace PT.Application.Features.Command.Transactions
                 .GreaterThan(0).WithMessage("Transaction amount must be greater than zero.")
                 .LessThanOrEqualTo(2_500_000).WithMessage("Transaction amount cannot exceed 2,500,000.");
 
-            RuleFor(x => x.Date)
+            RuleFor(x => x.Date).NotNull()
                 .LessThanOrEqualTo(DateTime.Now).WithMessage("Transaction date cannot be in the future.")
                 .GreaterThan(new DateTime(2000, 1, 1)).WithMessage("Transaction date cannot be before the year 2000.");
 

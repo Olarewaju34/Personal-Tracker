@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PT.Application.Abstraction.Repositories
 {
-    internal interface ITransactionRepository :IRepository<Transactions>
+    public interface ITransactionRepository :IRepository<Transactions>
     {
     }
 }

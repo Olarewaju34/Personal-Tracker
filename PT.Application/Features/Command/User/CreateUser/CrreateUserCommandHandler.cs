@@ -6,7 +6,7 @@ using PT.Domain.Entities.User;
 
 namespace PT.Application.Features.Command.User.CreateUser
 {
-    internal sealed class CreateUserCommandHandler(IUserRepository _userRepository,IUnitOfWork _unitOfWork) : ICommandHandler<CreateUserCommand, Result>
+    internal sealed class CreateUserCommandHandler(IUserRepository _userRepository, IUnitOfWork _unitOfWork) : ICommandHandler<CreateUserCommand, Result>
     {
         public async Task<Result<Result>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
@@ -16,12 +16,12 @@ namespace PT.Application.Features.Command.User.CreateUser
                 return Result.Failure(UserErrors.SameEmail);
             }
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.dto.Password);
-            if (passwordHash is  null)
+            if (passwordHash is null)
             {
                 return Result.Failure(UserErrors.InvalidCredentials);
             }
-           
-            var newUser = Users.CreateUser(request.dto.FirstName,request.dto.LastName,request.dto.PhoneNumber,request.dto.Email,passwordHash);
+
+            var newUser = Users.CreateUser(request.dto.FirstName, request.dto.LastName, request.dto.PhoneNumber, request.dto.Email, passwordHash);
             try
             {
                 await _userRepository.CreateAsync(newUser);
