@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace PT.Domain.Entities.Transaction
 {
-    internal class TransactionErrors
+    public class TransactionErrors
     {
         public static Error NotPositiveAmount = new ("Transactions.NotPositive", "Enter a Valid Amount"); 
-        public static Error NullValue = new ("Transactions.NullValue", "Enter a Valid Amount");  
+        public static Error NullValue = new ("Transactions.NullValue", "Enter a Valid Amount");
+        public static Error Inaccessibility = new("Transaction.InAccesiblity", "You cannot access this transaction");
         public static Error NoFutureDate = new ("Transactions.Present/PastDate", "You cannot type in future date");
 
     }
