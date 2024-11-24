@@ -25,7 +25,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransaction
             }
             var claimsUserId = expiredTokenPricipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            var user = await _userRepository.GetAsync(u => u.Id == claimsUserId);
+            var user = await _userRepository.GetUsersAsync(u => u.Id == claimsUserId);
             if (user == null)
             {
                 return Result.Failure(UserErrors.NotFound);
@@ -38,10 +38,12 @@ namespace PT.Application.Features.Query.Transaction.GetTransaction
             {
                 return Result.Failure(TransactionErrors.Inaccessibility);
             }
-            var transaction = new TransactionDto(UserId: user.Id,
+            var transaction = new TransactionDto(
+                UserId: user.Id,
                 UserName: $"{user.FirstName} {user.LastName}",
                 Amount: dbTransaction.Amount,
                 CategoryId: dbTransaction.CategoryId,
+                CategoryName: dbTransaction.Category.Name,
                 Date: dbTransaction.Date,
                 Description: dbTransaction.Description);
             return Result.Success(transaction);
