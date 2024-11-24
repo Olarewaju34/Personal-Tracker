@@ -9,6 +9,7 @@ namespace PT.Application.Features.Command.Transaction.CreateTransactions
     {
         public async Task<Result<Result>> Handle(CreateTransactionsCommand request, CancellationToken cancellationToken)
         {
+
             var user = await _userRepository.GetAsync(request.Dto.UserId);
             if (user == null)
             {

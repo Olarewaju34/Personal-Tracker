@@ -31,7 +31,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
             }
             var userTransactions = user.Transactions.Where(tr => tr.IsDeleted != false).Select(u => new TransactionDto
             (
-                UserId: claimsUserId,
+                UserId: user.Id,
                 UserName: $"{user.FirstName} {user.LastName}",
                 Amount: u.Amount,
                 CategoryId: u.CategoryId,

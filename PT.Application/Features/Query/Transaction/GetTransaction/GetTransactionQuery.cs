@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace PT.Application.Features.Query.Transaction.GetTransaction
 {
-    public record GetTransactionQuery(string Id, string Token, string RefreshToken) : IQuery<Result>
-    {
-    }
+    public record GetTransactionQuery(string Id, string Token, string RefreshToken) : IQuery<Result>;
+
 }
