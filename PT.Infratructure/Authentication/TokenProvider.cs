@@ -63,7 +63,25 @@ namespace PT.Infratructure.Authentication
 
         public ClaimsPrincipal GetPrincipalFromToken(string token)
         {
-            throw new NotImplementedException();
+            var key = Encoding.UTF8.GetBytes(_jwtsettings.Key);
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken != null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+            return principal;
+
         }
     }
 }

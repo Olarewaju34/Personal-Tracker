@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PT.Application.Features.Query.Transaction
+namespace PT.Application.Features.Query.Transaction.GetTransaction
 {
-    public record GetTransactionQuery(TransactionDto TransactionDto,string Id) :IQuery<Result>
+    public record GetTransactionQuery(string Id, string Token, string RefreshToken) : IQuery<Result>
     {
     }
 }
