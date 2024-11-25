@@ -1,10 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PT.Application.Abstraction.ExternalApi;
+using PT.Application.Abstraction;
+using PT.Application.Abstraction.ExternalApi.OptionsSettings;
+using PT.Application.Abstraction.Repositories;
+using PT.Infratructure.Authentication;
 using PT.Infratructure.Data;
 using PT.Infratructure.Jwt;
+using PT.Infratructure.Repositories;
 using System.Configuration;
 
 namespace PT.Infratructure.Extension
@@ -14,6 +21,7 @@ namespace PT.Infratructure.Extension
         public static IServiceCollection AddInfrastructureDI(this IServiceCollection services, IConfiguration config)
         {
             AddJWTAuth(services, config);
+            AddPersistence(services, config);
             return services;
         }
         private static IServiceCollection AddJWTAuth(this IServiceCollection services, IConfiguration config)
@@ -38,6 +46,14 @@ namespace PT.Infratructure.Extension
          config.GetConnectionString("DefaultConnection")
          ?? throw new ArgumentNullException(nameof(config));
             services.AddDbContext<PTContext>(Opt => Opt.UseMySQL(config.GetConnectionString(connectionString)));
+            services.Configure< GoogleAuthConfig>(config.GetSection("GoogleAuthConfig"));
+            services.AddSingleton<GoogleAuthConfig>(sp=>sp.GetRequiredService<IOptions<GoogleAuthConfig>>().Value);
+
+
+            services.AddScoped<ITokenProvider, TokenProvider>();
+            services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGoogleAuthService, GoogleAuthentication>();
         }
     }
 }
