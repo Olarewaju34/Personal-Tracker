@@ -25,7 +25,6 @@ public class Transactions : BaseEntity
         {
            Amount = dto.Amount,
            CategoryId = dto.CategoryId,
-           UserId = dto.UserId,
            Description = dto.Description,
            Date = dto.Date,
            MoneyFlow = dto.MoneyFlow
