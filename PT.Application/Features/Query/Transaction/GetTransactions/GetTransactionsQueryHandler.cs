@@ -2,14 +2,10 @@
 using PT.Application.Abstraction.Messaging;
 using PT.Application.Abstraction.Repositories;
 using PT.Domain.Abstraction;
+using PT.Domain.Entities.Transaction;
 using PT.Domain.Entities.Transaction.Dtos;
 using PT.Domain.Entities.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PT.Application.Features.Query.Transaction.GetTransactions
 {
@@ -29,7 +25,13 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
             {
                 return Result.Failure(UserErrors.NotFound);
             }
-            var userTransactions = user.Transactions.Where(tr => tr.IsDeleted != false).Select(u => new TransactionDto
+            var transactions = await transactionRepository.GetAllAsync();
+            if (!transactions.Any())
+            {
+                return Result.Failure(TransactionErrors.NotFound);
+            }
+
+            var userTransactions = transactions.Where(tr => tr.IsDeleted != false && tr.UserId==user.Id).Select(u => new TransactionDto
             (
                 UserId: user.Id,
                 UserName: $"{user.FirstName} {user.LastName}",
@@ -39,7 +41,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
                 Date: u.Date,
                 Description: u.Description
              )).ToList();
-           return Result.Success(userTransactions);
+            return Result.Success(userTransactions);
         }
     }
 }

@@ -13,6 +13,8 @@ using PT.Infratructure.Data;
 using PT.Infratructure.Jwt;
 using PT.Infratructure.Repositories;
 using System.Configuration;
+using PT.Infratructure.Caching;
+using PT.Application.Caching;
 
 namespace PT.Infratructure.Extension
 {
@@ -54,6 +56,8 @@ namespace PT.Infratructure.Extension
             services.AddScoped<ITransactionRepository, TransactionsRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGoogleAuthService, GoogleAuthentication>();
+            services.AddSingleton<ICachedService, CacheService>();
         }
+      
     }
 }
