@@ -5,22 +5,17 @@ using PT.Domain.Abstraction;
 using PT.Domain.Entities.Transaction;
 using PT.Domain.Entities.Transaction.Dtos;
 using PT.Domain.Entities.User;
+using PT.Domain.Entities.User.Dto;
 using System.Security.Claims;
 
 namespace PT.Application.Features.Query.Transaction.GetTransactions
 {
-    public sealed class GetTransactionsQueryHandler(IUserRepository _userRepository, ITokenProvider _tokenProvider, ITransactionRepository transactionRepository) : IQueryHandler<GetTransactionsQuery, Result>
+    public sealed class GetTransactionsQueryHandler(IUserRepository _userRepository,ITransactionRepository transactionRepository,IUserContext userContext) : IQueryHandler<GetTransactionsQuery, Result>
     {
         public async Task<Result<Result>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
-            var expiredTokenPricipal = _tokenProvider.GetPrincipalFromToken(request.Token);
-            if (expiredTokenPricipal == null)
-            {
-                return Result.Failure(UserErrors.RequestNewToken);
-            }
-            var claimsUserId = expiredTokenPricipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            var user = await _userRepository.GetUsersAsync(u => u.Id == claimsUserId);
+ 
+            var user = await _userRepository.GetUsersAsync(u => u.Id == userContext.UserId);
             if (user == null)
             {
                 return Result.Failure(UserErrors.NotFound);
@@ -28,7 +23,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
             var transactions = await transactionRepository.GetAllAsync();
             if (!transactions.Any())
             {
-                return Result.Failure(TransactionErrors.NotFound);
+                return Result.Failure<TransactionDto>(TransactionErrors.NotFound);
             }
 
             var userTransactions = transactions.Where(tr => tr.IsDeleted != false && tr.UserId==user.Id).Select(u => new TransactionDto

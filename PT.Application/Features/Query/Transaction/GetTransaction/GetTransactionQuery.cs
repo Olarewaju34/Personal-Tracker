@@ -1,4 +1,5 @@
 ﻿using PT.Application.Abstraction.Messaging;
+using PT.Application.Caching;
 using PT.Domain.Abstraction;
 using PT.Domain.Entities.Transaction.Dtos;
 using System;
@@ -9,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace PT.Application.Features.Query.Transaction.GetTransaction
 {
-    public record GetTransactionQuery(string Id, string Token, string RefreshToken) : IQuery<Result>;
+    public record GetTransactionQuery(string Id) : ICachedQuery<Result>
+    {
+        public string CacheKey => $"transaction-{Id}";
 
+        public TimeSpan? Expiration => TimeSpan.FromDays(2);
+    }
 }

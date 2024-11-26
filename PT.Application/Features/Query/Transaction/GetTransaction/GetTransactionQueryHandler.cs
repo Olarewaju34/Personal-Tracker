@@ -14,18 +14,11 @@ using System.Threading.Tasks;
 
 namespace PT.Application.Features.Query.Transaction.GetTransaction
 {
-    public sealed class GetTransactionQueryHandler(IUserRepository _userRepository, ITransactionRepository _transactionRepository, ITokenProvider _tokenProvider) : IQueryHandler<GetTransactionQuery, Result>
+    public sealed class GetTransactionQueryHandler(IUserRepository _userRepository, ITransactionRepository _transactionRepository, IUserContext userContext) : IQueryHandler<GetTransactionQuery, Result>
     {
         public async Task<Result<Result>> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
         {
-            var expiredTokenPricipal = _tokenProvider.GetPrincipalFromToken(request.Token);
-            if (expiredTokenPricipal == null)
-            {
-                return Result.Failure(UserErrors.RequestNewToken);
-            }
-            var claimsUserId = expiredTokenPricipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            var user = await _userRepository.GetUsersAsync(u => u.Id == claimsUserId);
+            var user = await _userRepository.GetUsersAsync(u => u.Id == userContext.UserId);
             if (user == null)
             {
                 return Result.Failure(UserErrors.NotFound);
