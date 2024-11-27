@@ -15,7 +15,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
         public async Task<Result<Result>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
  
-            var user = await _userRepository.GetUsersAsync(u => u.Id == userContext.UserId);
+            var user = await _userRepository.GetUsersAsync(userContext.UserId);
             if (user == null)
             {
                 return Result.Failure(UserErrors.NotFound);
@@ -26,7 +26,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
                 return Result.Failure<TransactionDto>(TransactionErrors.NotFound);
             }
 
-            var userTransactions = transactions.Where(tr => tr.IsDeleted != false && tr.UserId==user.Id).Select(u => new TransactionDto
+            var userTransactions = transactions.Where(tr => tr.IsDeleted != false && tr.UserId == user.Id).Select(u => new TransactionDto
             (
                 UserId: user.Id,
                 UserName: $"{user.FirstName} {user.LastName}",
@@ -36,7 +36,11 @@ namespace PT.Application.Features.Query.Transaction.GetTransactions
                 Date: u.Date,
                 Description: u.Description
              )).ToList();
-            return Result.Success(userTransactions);
+            if (userTransactions.Any())
+            {
+                return Result.Success(userTransactions);
+            }
+            return Result.Failure(TransactionErrors.NotFound);
         }
     }
 }

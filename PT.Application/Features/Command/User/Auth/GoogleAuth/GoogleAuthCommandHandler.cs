@@ -48,7 +48,7 @@ public class GoogleAuthCommandHandler : ICommandHandler<GoogleAuthCommand, Resul
         using (HttpClient httpClient = new HttpClient())
         {
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", request.AccessToken);
-            var response = await httpClient.GetAsync(string.Format(_googleAuthConfig.BaseUrl, _googleAuthConfig.Endpoint));
+            var response = await httpClient.GetAsync(string.Concat(_googleAuthConfig.BaseUrl, _googleAuthConfig.Endpoint));
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();

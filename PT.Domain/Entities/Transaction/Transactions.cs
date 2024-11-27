@@ -9,7 +9,7 @@ public class Transactions : BaseEntity
 {
     public Transactions()
     {
-        
+
     }
     public string UserId { get; private set; }
     public Users User { get; private set; }
@@ -19,15 +19,16 @@ public class Transactions : BaseEntity
     public DateTime Date { get; private set; }
     public string Description { get; private set; }
     public MoneyFlow MoneyFlow { get; private set; }
-    public static Transactions CreateTransaction(CreateTransactionDto dto)
+    public static Transactions CreateTransaction(CreateTransactionDto dto,string userId)
     {
         var transaction = new Transactions()
         {
-           Amount = dto.Amount,
-           CategoryId = dto.CategoryId,
-           Description = dto.Description,
-           Date = dto.Date,
-           MoneyFlow = dto.MoneyFlow
+            UserId = userId,
+            Amount = dto.Amount,
+            CategoryId = dto.CategoryId,
+            Description = dto.Description,
+            Date = dto.Date,
+            MoneyFlow = dto.MoneyFlow
         };
         return transaction;
     }
