@@ -21,7 +21,7 @@ namespace PT.Application.Features.Command.User.Auth.Normalauth
                 return Result.Failure(UserErrors.NotFound);
             }
             var user = await _userRepository.GetAsync(u => u.Email == request.Email);
-            var passswordMatch = BCrypt.Net.BCrypt.Verify(request.Email, user.Email);
+            var passswordMatch = BCrypt.Net.BCrypt.Verify(request.Password, user.PassWord);
             if (!passswordMatch)
             {
                 return Result.Failure(UserErrors.InvalidCredentials);

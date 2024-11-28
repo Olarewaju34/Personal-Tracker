@@ -18,7 +18,7 @@ namespace PT.Application.Features.Query.Transaction.GetTransaction
     {
         public async Task<Result<Result>> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUsersAsync(u => u.Id == userContext.UserId);
+            var user = await _userRepository.GetUsersAsync(userContext.UserId);
             if (user == null)
             {
                 return Result.Failure(UserErrors.NotFound);
