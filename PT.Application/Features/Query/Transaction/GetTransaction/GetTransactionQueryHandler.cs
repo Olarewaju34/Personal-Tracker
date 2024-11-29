@@ -23,11 +23,8 @@ namespace PT.Application.Features.Query.Transaction.GetTransaction
             {
                 return Result.Failure(UserErrors.NotFound);
             }
-            var dbTransaction = await _transactionRepository.GetAsync(request.Id);
-
-            var userTransaction = user.Transactions.ToList();
-
-            if (!userTransaction.Contains(dbTransaction))
+            Transactions? dbTransaction = await _transactionRepository.GetTransactions(request.Id);
+            if (user.Id != dbTransaction.UserId)
             {
                 return Result.Failure(TransactionErrors.Inaccessibility);
             }

@@ -10,5 +10,6 @@ namespace PT.Application.Abstraction.Repositories
 {
     public interface ITransactionRepository :IRepository<Transactions>
     {
+        Task<Transactions> GetTransactions(string id,CancellationToken cancellationToken = default);
     }
 }

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Query\Budget\GetBudgets\" />
     <Folder Include="Features\Query\User\" />
   </ItemGroup>
 

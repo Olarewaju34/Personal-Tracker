@@ -10,5 +10,6 @@ namespace PT.Application.Abstraction.Repositories
 {
     public interface IBudgetRepository :IRepository<Budgets>
     {
+        Task<Budgets> GetUsersBudget(string Id, CancellationToken cancellationToken = default);
     }
 }
