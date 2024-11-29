@@ -29,7 +29,7 @@ namespace PT.Application.Features.Query.Budget.GetBudget
             {
                 return Result.Failure(BudgetErrors.InAccesible);
             }
-            var userBudget = user.Budgets.Where(bg => bg.UserId == userContext.UserId).Select(bg => new BudgetDto
+            var userBudget = user.Budgets.Where(bg => bg.UserId == user.Id).Select(bg => new BudgetDto
             (          
                UserId : user.Id,
                CategoryId:bg.CategoryId,
