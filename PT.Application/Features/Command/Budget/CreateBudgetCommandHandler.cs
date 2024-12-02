@@ -4,6 +4,7 @@ using PT.Application.Abstraction.Repositories;
 using PT.Application.Abstractions.Clock;
 using PT.Domain.Abstraction;
 using PT.Domain.Entities.Budget;
+using PT.Domain.Entities.Budget.Event;
 using PT.Domain.Entities.Category;
 using PT.Domain.Entities.User;
 using System;
@@ -34,6 +35,7 @@ namespace PT.Application.Features.Command.Budget
                 var budget = Budgets.CreateBudget(user.Id, category.Id, request.Amount, request.Description, duration, dateTimeProvider.UtcNow);
                 await budgetRepository.CreateAsync(budget);
                 await unitOfWork.SaveChangesAsync(cancellationToken);
+                budget.RaiseDomainEvent(new BudgetCreatedEvent(budget.Id));
                 return Result.Success(budget);
             }
             catch (Exception)

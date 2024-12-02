@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PT.Application.Features.Query.Transaction.GetTransactions
 {
-    public record GetTransactionsQuery(string Token) : ICachedQuery<Result>
+    public record GetTransactionsQuery() : ICachedQuery<Result>
     {
-        public string CacheKey => $"{Token}";
+        public string CacheKey => "transactions";
 
         public TimeSpan? Expiration => null;
     }
