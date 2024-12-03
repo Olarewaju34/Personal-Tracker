@@ -10,7 +10,7 @@ namespace PT.Domain.Abstraction;
 public interface IRepository<T> where T : BaseEntity, new()
 {
     Task<T> CreateAsync(T entity);
-    Task<T> GetAsync(string id);
+    Task<T> GetAsync(string id,CancellationToken cancellation = default);
     Task<T> GetAsync(Expression<Func<T, bool>> expression,CancellationToken cancellationToken=default);
     Task<T> UpdateAsync(T entity);
     Task RemoveAsync(T entity);

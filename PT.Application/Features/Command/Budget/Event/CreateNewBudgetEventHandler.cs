@@ -11,13 +11,13 @@ namespace PT.Application.Features.Command.Budget.Event
     {
         public async Task Handle(BudgetCreatedEvent notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Received event{typeof(BudgetCreatedEvent)}");
-            var budget = await budgetRepository.GetUsersBudget(notification.BudgetId);
-            var user = await userRepository.GetAsync(budget.UserId);
+            _logger.LogInformation($"Received event{typeof(BudgetCreatedEvent).Name}");
+            var budget = await budgetRepository.GetUsersBudget(notification.BudgetId,cancellationToken);
+            var user = await userRepository.GetAsync(budget.UserId,cancellationToken);
             var content = EmailTemplate.GetBudgetCreatedEmail(budget.Categories.Name,Convert.ToString(budget.Amount),budget.Duration.Start,budget.Duration.End);
             try
             {
-                await emailService.SendEmailAsync([user.Email], "🎉 Welcome to making good financial decision! Confirm Your Email to Get Started! 🚀", content, false, cancellationToken);
+                await emailService.SendEmailAsync([user.Email], "You just created a budget", content, false, cancellationToken);
 
             }
             catch (Exception ex)

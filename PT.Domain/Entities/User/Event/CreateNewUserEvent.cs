@@ -2,7 +2,7 @@
 
 namespace PT.Domain.Entities.User.Event
 {
-    public record CreateNewStudentEvent(string StudentId) : IDomainEvent
+    public record CreateNewUserEvent(string UserId) : IDomainEvent
     {
     }
 }

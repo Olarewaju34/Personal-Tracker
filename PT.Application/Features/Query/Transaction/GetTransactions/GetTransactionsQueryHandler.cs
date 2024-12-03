@@ -10,11 +10,11 @@ using System.Security.Claims;
 
 namespace PT.Application.Features.Query.Transaction.GetTransactions
 {
-    public sealed class GetTransactionsQueryHandler(IUserRepository _userRepository,ITransactionRepository transactionRepository,IUserContext userContext) : IQueryHandler<GetTransactionsQuery, Result>
+    public sealed class GetTransactionsQueryHandler(IUserRepository _userRepository, ITransactionRepository transactionRepository, IUserContext userContext) : IQueryHandler<GetTransactionsQuery, Result>
     {
         public async Task<Result<Result>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
- 
+
             var user = await _userRepository.GetUsersAsync(userContext.UserId);
             if (user == null)
             {

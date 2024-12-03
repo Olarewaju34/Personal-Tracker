@@ -22,7 +22,7 @@ public abstract class Repository<T> : IRepository<T> where T : BaseEntity, new()
         return entity;
     }
 
-    public async Task<T> GetAsync(string id)
+    public async Task<T> GetAsync(string id,CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().FindAsync(id);
     }

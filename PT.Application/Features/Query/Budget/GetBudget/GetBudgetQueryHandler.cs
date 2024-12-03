@@ -1,5 +1,4 @@
-﻿
-using PT.Application.Abstraction;
+﻿using PT.Application.Abstraction;
 using PT.Application.Abstraction.Messaging;
 using PT.Application.Abstraction.Repositories;
 using PT.Domain.Abstraction;
@@ -24,19 +23,19 @@ namespace PT.Application.Features.Query.Budget.GetBudget
             {
                 return Result.Failure(UserErrors.NotFound);
             }
-            var budget=  await budgetRepository.GetUsersBudget(request.Id);
-            if(budget.UserId == user.Id)
+            var budget = await budgetRepository.GetUsersBudget(request.Id);
+            if (budget.UserId == user.Id)
             {
                 return Result.Failure(BudgetErrors.InAccesible);
             }
             var userBudget = user.Budgets.Where(bg => bg.UserId == user.Id).Select(bg => new BudgetDto
-            (          
-               UserId : user.Id,
-               CategoryId:bg.CategoryId,
-               Amount:bg.Amount,
-               Description:bg.Description,
-               duration:bg.Duration,
-               createdAt:bg.Created
+            (
+               UserId: user.Id,
+               CategoryId: bg.CategoryId,
+               Amount: bg.Amount,
+               Description: bg.Description,
+               duration: bg.Duration,
+               createdAt: bg.Created
             )).ToList();
             if (!userBudget.Any())
             {

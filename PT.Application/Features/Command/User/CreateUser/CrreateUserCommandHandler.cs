@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using PT.Application.Abstraction.Messaging;
 using PT.Application.Abstraction.Repositories;
+using PT.Application.Features.Command.User.Event;
 using PT.Domain.Abstraction;
 using PT.Domain.Entities.User;
+using PT.Domain.Entities.User.Event;
 
 namespace PT.Application.Features.Command.User.CreateUser
 {
@@ -26,6 +28,7 @@ namespace PT.Application.Features.Command.User.CreateUser
             {
                 await _userRepository.CreateAsync(newUser);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
+                newUser.RaiseDomainEvent(new CreateNewUserEvent(newUser.Id));
                 return Result.Success();
             }
             catch (Exception)
