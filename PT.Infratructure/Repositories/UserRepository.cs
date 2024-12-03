@@ -15,15 +15,15 @@ namespace PT.Infratructure.Repositories;
 
     public class UserRepository(PTContext _context) : Repository<Users>(_context), IUserRepository
     {
-        public async Task<Users> GetUsersAsync(Expression<Func<Users, bool>> expression)
+        public async Task<Users?> GetUsersAsync(Expression<Func<Users, bool>> expression)
         {
-            var user = _context.Users.Include(u=>u.Transactions).ThenInclude(tr=>tr.Category).FirstOrDefault(expression);
+            var user = await _context.Users.Include(u=>u.Transactions).ThenInclude(tr=>tr.Category).FirstOrDefaultAsync(expression);
             return user;
         }
 
-        public async Task<Users> GetUsersAsync(string id)
+        public async Task<Users?> GetUsersAsync(string id)
         {
-            Users? user = _context.Users.Include(u => u.Transactions).ThenInclude(tr => tr.Category).FirstOrDefault(u=>u.Id == id);
+            var user = await _context.Users.Include(u => u.Transactions).ThenInclude(tr => tr.Category).FirstOrDefaultAsync(u=>u.Id == id);
             return user;    
     }
 }

@@ -10,9 +10,9 @@ namespace PT.Domain.Entities.Budget
         public Users Users { get; private set; }
         public decimal Amount { get; private set; }
         public string CategoryId { get ; private set; }
-        public Categories Categories { get; private set; }
-        public string Description { get;protected set; }
-        public DateRange Duration { get; private set; }
+        public Categories? Categories { get; private set; }
+        public string ?Description { get;protected set; }
+        public DateRange? Duration { get; private set; }
 
 
         public static Budgets CreateBudget(string UserId, string CategoryId, decimal Amount, string Description,DateRange duration,DateTime createdAt)

@@ -11,8 +11,8 @@ namespace PT.Application.Abstraction.Repositories
 {
     public interface IUserRepository : IRepository<Users>
     {
-        Task<Users> GetUsersAsync(Expression<Func<Users, bool>> expression);
-        Task<Users> GetUsersAsync(string id);
+        Task<Users?> GetUsersAsync(Expression<Func<Users, bool>> expression);
+        Task<Users?> GetUsersAsync(string id);
 
     }
 }

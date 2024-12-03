@@ -17,9 +17,9 @@ namespace PT.Infratructure.Repositories
         {
 
         }
-        public async Task<Budgets> GetUsersBudget(string Id, CancellationToken cancellationToken = default)
+        public async Task<Budgets?> GetUsersBudget(string Id, CancellationToken cancellationToken = default)
         {
-            var budget = await _context.Budgets.Include(bg => bg.Users).FirstOrDefaultAsync(bg => bg.Id == Id,cancellationToken);
+            var budget = await _context.Budgets.Include(bg => bg.Users).Include(bg=>bg.Categories).FirstOrDefaultAsync(bg => bg.Id == Id,cancellationToken);
             return budget;
         }
     }
